@@ -14,9 +14,5 @@
     <ProjectReference Include="..\Client\BeerDrivenFrontend.Client.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 
 </Project>
