@@ -1,4 +1,5 @@
 using BeerDrivenFrontend.Client;
+using BlazorComponentBus;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Services;
@@ -15,5 +16,6 @@ builder.Services.AddScoped<LazyAssemblyLoader>();
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
 builder.Services.AddMudServices();
+builder.Services.AddScoped<ComponentBus>();
 
 await builder.Build().RunAsync();

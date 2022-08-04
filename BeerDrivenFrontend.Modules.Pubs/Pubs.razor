@@ -1,0 +1,16 @@
+﻿@inherits PubsBase
+@page "/pubs"
+
+@using MudBlazor
+
+<PageTitle>Pubs</PageTitle>
+
+<MudPaper Elevation="25">
+	<MudToolBar>
+		<MudTooltip Text="Order Beer to Production">
+			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnLoadBeers"/>
+		</MudTooltip>
+	</MudToolBar>
+</MudPaper>
+
+<MudAlert>@Message</MudAlert>

@@ -1,0 +1,14 @@
+﻿@inherits ProductionBase
+@page "/production"
+
+@using MudBlazor
+
+<PageTitle>Production</PageTitle>
+
+<MudPaper Elevation="25">
+	<MudToolBar>
+		<MudTooltip Text="Order Beer to Production">
+			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnLoadBeers"/>
+		</MudTooltip>
+	</MudToolBar>
+</MudPaper>
