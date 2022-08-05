@@ -1,4 +1,4 @@
-﻿using BeerDrivenFrontend.Shared.Events;
+﻿using BeerDrivenFrontend.Modules.Pubs.Events;
 using BlazorComponentBus;
 using Microsoft.AspNetCore.Components;
 
@@ -12,7 +12,7 @@ public class PubsBase : ComponentBase, IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        await OnLoadBeers();
+        await OnSayHelloBrewers();
 
         Bus.Subscribe<SayHelloBrewer>(MessageAddedHandler);
 
@@ -22,9 +22,10 @@ public class PubsBase : ComponentBase, IDisposable
     private void MessageAddedHandler(MessageArgs args)
     {
         Message = args.GetMessage<SayHelloBrewer>().Message;
+        StateHasChanged();
     }
 
-    protected Task OnLoadBeers()
+    protected Task OnSayHelloBrewers()
     {
         return Task.CompletedTask;
     }

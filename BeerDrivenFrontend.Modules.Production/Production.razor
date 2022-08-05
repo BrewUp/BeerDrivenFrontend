@@ -2,13 +2,10 @@
 @page "/production"
 
 @using MudBlazor
+@using BeerDrivenFrontend.Modules.Production.Components
 
 <PageTitle>Production</PageTitle>
 
-<MudPaper Elevation="25">
-	<MudToolBar>
-		<MudTooltip Text="Order Beer to Production">
-			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnLoadBeers"/>
-		</MudTooltip>
-	</MudToolBar>
-</MudPaper>
+<ProductionToolbar></ProductionToolbar>
+<hr/>
+<MudAlert>@Message</MudAlert>

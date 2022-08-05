@@ -2,15 +2,9 @@
 @page "/pubs"
 
 @using MudBlazor
+@using BeerDrivenFrontend.Modules.Pubs.Components
 
 <PageTitle>Pubs</PageTitle>
-
-<MudPaper Elevation="25">
-	<MudToolBar>
-		<MudTooltip Text="Order Beer to Production">
-			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnLoadBeers"/>
-		</MudTooltip>
-	</MudToolBar>
-</MudPaper>
-
+<PubsToolbar></PubsToolbar>
+<hr/>
 <MudAlert>@Message</MudAlert>

@@ -1,26 +1,20 @@
 ﻿using BeerDrivenFrontend.Modules.Production.Events;
-using BlazorComponentBus;
 using Microsoft.AspNetCore.Components;
 
-namespace BeerDrivenFrontend.Modules.Production;
+namespace BeerDrivenFrontend.Modules.Production.Components;
 
-public class ProductionBase : ComponentBase, IDisposable
+public class ProductionToolbarBase : ComponentBase, IDisposable
 {
-    [Inject] private ComponentBus Bus { get; set; } = default!;
-
-    protected string Message { get; set; } = string.Empty;
+    [Inject] private BlazorComponentBus.ComponentBus Bus { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        Bus.Subscribe<OrderBeerEvent>(MessageAddedHandler);
         await base.OnInitializedAsync();
     }
 
-    private void MessageAddedHandler(MessageArgs args)
+    protected Task OnOrderBeer()
     {
-        Message = args.GetMessage<OrderBeerEvent>().Message;
-
-        StateHasChanged();
+        return Bus.Publish(new OrderBeerEvent("Please ... Prepare beer for me"));
     }
 
     #region Dispose
@@ -37,7 +31,7 @@ public class ProductionBase : ComponentBase, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    ~ProductionBase()
+    ~ProductionToolbarBase()
     {
         Dispose(false);
     }
