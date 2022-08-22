@@ -1,0 +1,16 @@
+﻿@inherits ProductionGridBase
+@using MudBlazor
+@using BeerDrivenFrontend.Modules.Production.Extensions.Dtos
+
+<MudTable Items="@Beers" Hover="true" @ref="MudTable" Striped="true" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="BeerJson">
+	<HeaderContent>
+		<MudTh>Id</MudTh>
+		<MudTh>Type</MudTh>
+		<MudTh>Quantity</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Nr">@context.BeerId</MudTd>
+		<MudTd DataLabel="Sign">@context.BeerType</MudTd>
+		<MudTd DataLabel="Sign">@context.Quantity</MudTd>
+	</RowTemplate>
+</MudTable>

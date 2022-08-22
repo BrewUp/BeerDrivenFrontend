@@ -1,5 +1,9 @@
 using BeerDrivenFrontend.Client;
+using BeerDrivenFrontend.Modules.Production.Extensions;
+using BeerDrivenFrontend.Shared.Configuration;
+using BeerDrivenFrontend.Shared.Helpers;
 using BlazorComponentBus;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Services;
@@ -12,10 +16,28 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+#region Configuration
+builder.Services.AddSingleton(_ => builder.Configuration.GetSection("BrewUp:AppConfiguration")
+    .Get<AppConfiguration>());
+builder.Services.AddApplicationService();
+#endregion
+
+#region Infrastructure
 builder.Services.AddScoped<LazyAssemblyLoader>();
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs\\BrewUp.log")
+    .CreateLogger();
+
 builder.Services.AddMudServices();
+builder.Services.AddBlazoredSessionStorage();
+
 builder.Services.AddScoped<ComponentBus>();
+#endregion
+
+#region Modules
+builder.Services.AddProductionModule();
+#endregion
 
 await builder.Build().RunAsync();

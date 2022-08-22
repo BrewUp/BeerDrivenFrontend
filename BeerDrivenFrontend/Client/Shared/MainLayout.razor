@@ -1,5 +1,4 @@
 ﻿@inherits MainLayoutBase
-@using MudBlazor.ThemeManager
 @using Microsoft.AspNetCore.Components
 @using MudBlazor
 
@@ -15,9 +14,6 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/brewup" Target="_blank" />
-        
-        <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-        <MudThemeManager Open="ThemeManagerOpen" OpenChanged="OpenThemeManager" Theme="ThemeManager" ThemeChanged="UpdateTheme" />
     </MudAppBar>
     <MudDrawer @bind-Open="DrawerOpen" Elevation="1">
         <MudDrawerHeader>

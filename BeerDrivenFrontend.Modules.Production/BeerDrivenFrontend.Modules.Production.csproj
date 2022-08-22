@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BeerDrivenFrontend.Modules.Production.Extensions\BeerDrivenFrontend.Modules.Production.Extensions.csproj" />
     <ProjectReference Include="..\BeerDrivenFrontend.Shared\BeerDrivenFrontend.Shared.csproj" />
   </ItemGroup>
 
