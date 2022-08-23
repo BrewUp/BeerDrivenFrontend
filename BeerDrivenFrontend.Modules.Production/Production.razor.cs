@@ -13,14 +13,21 @@ public class ProductionBase : ComponentBase, IDisposable
 
     protected string Message { get; set; } = string.Empty;
     protected IEnumerable<BeerJson> Beers { get; set; } = Enumerable.Empty<BeerJson>();
+    protected IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
 
     protected override async Task OnInitializedAsync()
     {
         Bus.Subscribe<OrderBeerEvent>(MessageAddedHandler);
 
         await LoadBeersAsync();
+        await LoadProductionOrderAsync();
 
         await base.OnInitializedAsync();
+    }
+
+    private async Task LoadProductionOrderAsync()
+    {
+        ProductionOrders = await ProductionService.GetProductionOrdersAsync();
     }
 
     private async Task LoadBeersAsync()

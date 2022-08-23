@@ -10,20 +10,23 @@ public class ProductionGridBase : ComponentBase, IDisposable
     [Inject] private BlazorComponentBus.ComponentBus Bus { get; set; } = default!;
     [Parameter] public IEnumerable<BeerJson> Beers { get; set; } = Enumerable.Empty<BeerJson>();
 
+    [Parameter]
+    public IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
+
     private int _selectedRowNumber = -1;
-    protected MudTable<BeerJson> MudTable = new();
+    protected MudTable<ProductionOrderJson> MudTable = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
 
-    protected Task RowClickEvent(TableRowClickEventArgs<BeerJson> tableRowClickEventArgs)
+    protected Task RowClickEvent(TableRowClickEventArgs<ProductionOrderJson> tableRowClickEventArgs)
     {
-        return Bus.Publish(new OrderBeerEvent($"Beer selected {tableRowClickEventArgs.Item.BeerId}"));
+        return Bus.Publish(new OrderBeerEvent($"Order selected {tableRowClickEventArgs.Item.BatchNumber}"));
     }
 
-    protected string SelectedRowClassFunc(BeerJson element, int rowNumber)
+    protected string SelectedRowClassFunc(ProductionOrderJson element, int rowNumber)
     {
         if (_selectedRowNumber == rowNumber)
         {

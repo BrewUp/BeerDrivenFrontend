@@ -2,15 +2,17 @@
 @using MudBlazor
 @using BeerDrivenFrontend.Modules.Production.Extensions.Dtos
 
-<MudTable Items="@Beers" Hover="true" @ref="MudTable" Striped="true" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="BeerJson">
+<MudTable Items="@ProductionOrders" Hover="true" @ref="MudTable" Striped="true" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="ProductionOrderJson">
 	<HeaderContent>
-		<MudTh>Id</MudTh>
-		<MudTh>Type</MudTh>
-		<MudTh>Quantity</MudTh>
+		<MudTh>Order Number</MudTh>
+		<MudTh>Beer Type</MudTh>
+		<MudTh>Quantity To Produce</MudTh>
+		<MudTh>Quantity Produced</MudTh>
 	</HeaderContent>
 	<RowTemplate>
-		<MudTd DataLabel="Nr">@context.BeerId</MudTd>
-		<MudTd DataLabel="Sign">@context.BeerType</MudTd>
-		<MudTd DataLabel="Sign">@context.Quantity</MudTd>
+		<MudTd DataLabel="#">@context.BatchNumber</MudTd>
+		<MudTd DataLabel="Type">@context.BeerType</MudTd>
+		<MudTd DataLabel="To Produce">@context.QuantityToProduce</MudTd>
+		<MudTd DataLabel="Produced">@context.QuantityProduced</MudTd>
 	</RowTemplate>
 </MudTable>
