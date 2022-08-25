@@ -5,6 +5,7 @@ using BeerDrivenFrontend.Shared.Configuration;
 using BlazorComponentBus;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.JSInterop;
 
 namespace BeerDrivenFrontend.Modules.Production;
 
@@ -36,19 +37,30 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
     {
         _hubConnection = new HubConnectionBuilder()
             .WithUrl($"{Configuration.ProductionApiUri}hubs/production")
+            .WithAutomaticReconnect()
             .Build();
 
-        _hubConnection.On<string>("BeerProductionStarted", async (message) =>
+        _hubConnection.On<string>("beerproductionstarted", async (message) =>
         {
             await LoadProductionOrderAsync();
-            Console.WriteLine($"Message Received: {message}");
+            await Bus.Publish(new OrderBeerEvent($"An update for {message} was received"));
             StateHasChanged();
         });
+
+        _hubConnection.Closed += exception =>
+        {
+            if (exception != null)
+            {
+                Bus.Publish(new OrderBeerEvent(exception.Message));
+            }
+
+            return null;
+        };
 
         try
         {
             await _hubConnection.StartAsync();
-            await Bus.Publish(new OrderBeerEvent("signalR Connection successfully established"));
+            await Bus.Publish(new OrderBeerEvent($"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId}"));
         }
         catch (Exception e)
         {
@@ -57,6 +69,11 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
             Console.WriteLine($"{Configuration.ProductionApiUri}/hubs/production");
             throw;
         }
+    }
+
+    private Task CreateNotifcationAsync(string message)
+    {
+        return Task.CompletedTask;
     }
 
     private async Task LoadProductionOrderAsync()
