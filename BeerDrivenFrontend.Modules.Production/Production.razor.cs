@@ -48,6 +48,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         try
         {
             await _hubConnection.StartAsync();
+            await Bus.Publish(new OrderBeerEvent("signalR Connection successfully established"));
         }
         catch (Exception e)
         {
