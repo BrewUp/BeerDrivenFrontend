@@ -40,7 +40,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
             .WithAutomaticReconnect()
             .Build();
 
-        _hubConnection.On<string>("beerproductionstarted", async (message) =>
+        _hubConnection.On<string>("beerProductionStarted", async (message) =>
         {
             await LoadProductionOrderAsync();
             await Bus.Publish(new OrderBeerEvent($"An update for {message} was received"));
@@ -60,20 +60,13 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         try
         {
             await _hubConnection.StartAsync();
-            await Bus.Publish(new OrderBeerEvent($"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId}"));
+            await Bus.Publish(new OrderBeerEvent(
+                $"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId} - Uri: {Configuration.ProductionApiUri}/hubs/production"));
         }
         catch (Exception e)
         {
             await Bus.Publish(new OrderBeerEvent($"{e.Message}"));
-            Console.WriteLine(e);
-            Console.WriteLine($"{Configuration.ProductionApiUri}/hubs/production");
-            throw;
         }
-    }
-
-    private Task CreateNotifcationAsync(string message)
-    {
-        return Task.CompletedTask;
     }
 
     private async Task LoadProductionOrderAsync()
