@@ -1,5 +1,6 @@
 using BeerDrivenFrontend.Client;
 using BeerDrivenFrontend.Modules.Production.Extensions;
+using BeerDrivenFrontend.Modules.Pubs.Extensions;
 using BeerDrivenFrontend.Shared.Configuration;
 using BeerDrivenFrontend.Shared.Helpers;
 using BlazorComponentBus;
@@ -38,6 +39,7 @@ builder.Services.AddScoped<ComponentBus>();
 
 #region Modules
 builder.Services.AddProductionModule();
+builder.Services.AddPubsModule();
 #endregion
 
 await builder.Build().RunAsync();

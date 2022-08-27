@@ -14,20 +14,6 @@ public sealed class ProductionService : BaseHttpService, IProductionService
     {
     }
 
-    public async Task<IEnumerable<BeerJson>> GetBeersAsync()
-    {
-        try
-        {
-            return await HttpService.Get<IEnumerable<BeerJson>>(
-                $"{AppConfiguration.ProductionApiUri}v1/production/beers");
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(CommonServices.GetDefaultErrorTrace(ex));
-            throw;
-        }
-    }
-
     public async Task<IEnumerable<ProductionOrderJson>> GetProductionOrdersAsync()
     {
         try

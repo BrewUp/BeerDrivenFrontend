@@ -1,0 +1,14 @@
+﻿@inherits PubsGridBase
+@using MudBlazor
+@using BeerDrivenFrontend.Modules.Pubs.Extensions.Dtos
+
+<MudTable Items="@Beers" Hover="true" @ref="MudTable" Striped="true" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="BeerJson">
+	<HeaderContent>
+		<MudTh>Beer Type</MudTh>
+		<MudTh>Quantity</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Beer Type">@context.BeerType</MudTd>
+		<MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+	</RowTemplate>
+</MudTable>

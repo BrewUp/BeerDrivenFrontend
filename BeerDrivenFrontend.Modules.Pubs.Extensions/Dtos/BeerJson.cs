@@ -1,4 +1,4 @@
-﻿namespace BeerDrivenFrontend.Modules.Production.Extensions.Dtos;
+﻿namespace BeerDrivenFrontend.Modules.Pubs.Extensions.Dtos;
 
 public class BeerJson
 {

@@ -5,7 +5,6 @@ using BeerDrivenFrontend.Shared.Configuration;
 using BlazorComponentBus;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.JSInterop;
 
 namespace BeerDrivenFrontend.Modules.Production;
 
@@ -16,7 +15,6 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
     [Inject] private AppConfiguration Configuration { get; set; } = new();
 
     protected string Message { get; set; } = string.Empty;
-    protected IEnumerable<BeerJson> Beers { get; set; } = Enumerable.Empty<BeerJson>();
     protected IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
 
     private HubConnection? _hubConnection = default!;
@@ -25,7 +23,6 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
     {
         Bus.Subscribe<OrderBeerEvent>(MessageAddedHandler);
 
-        await LoadBeersAsync();
         await LoadProductionOrderAsync();
 
         await Connect();
@@ -72,11 +69,6 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
     private async Task LoadProductionOrderAsync()
     {
         ProductionOrders = await ProductionService.GetProductionOrdersAsync();
-    }
-
-    private async Task LoadBeersAsync()
-    {
-        Beers = await ProductionService.GetBeersAsync();
     }
 
     private void MessageAddedHandler(MessageArgs args)

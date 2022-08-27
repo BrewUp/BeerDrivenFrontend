@@ -1,31 +1,30 @@
 ﻿using BeerDrivenFrontend.Modules.Production.Events;
-using BeerDrivenFrontend.Modules.Production.Extensions.Dtos;
+using BeerDrivenFrontend.Modules.Pubs.Extensions.Dtos;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BeerDrivenFrontend.Modules.Production.Components;
+namespace BeerDrivenFrontend.Modules.Pubs.Components;
 
-public class ProductionGridBase : ComponentBase, IDisposable
+public class PubsGridBase : ComponentBase, IDisposable
 {
     [Inject] private BlazorComponentBus.ComponentBus Bus { get; set; } = default!;
 
-    [Parameter]
-    public IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
+    [Parameter] public IEnumerable<BeerJson> Beers { get; set; } = Enumerable.Empty<BeerJson>();
 
     private int _selectedRowNumber = -1;
-    protected MudTable<ProductionOrderJson> MudTable = new();
+    protected MudTable<BeerJson> MudTable = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
 
-    protected Task RowClickEvent(TableRowClickEventArgs<ProductionOrderJson> tableRowClickEventArgs)
+    protected Task RowClickEvent(TableRowClickEventArgs<BeerJson> tableRowClickEventArgs)
     {
-        return Bus.Publish(new OrderBeerEvent($"Order selected {tableRowClickEventArgs.Item.BatchNumber}"));
+        return Bus.Publish(new OrderBeerEvent($"Beer selected {tableRowClickEventArgs.Item.BeerType}"));
     }
 
-    protected string SelectedRowClassFunc(ProductionOrderJson element, int rowNumber)
+    protected string SelectedRowClassFunc(BeerJson element, int rowNumber)
     {
         if (_selectedRowNumber == rowNumber)
         {
@@ -55,7 +54,7 @@ public class ProductionGridBase : ComponentBase, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    ~ProductionGridBase()
+    ~PubsGridBase()
     {
         Dispose(false);
     }
