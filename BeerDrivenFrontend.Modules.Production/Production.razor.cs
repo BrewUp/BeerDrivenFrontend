@@ -33,7 +33,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
     private async Task Connect()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl($"{Configuration.ProductionApiUri}hubs/production")
+            .WithUrl($"{Configuration.SignalRUri}hubs/production")
             .WithAutomaticReconnect()
             .Build();
 

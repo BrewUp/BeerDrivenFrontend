@@ -6,5 +6,6 @@
         public string AuthenticationApiUri { get; set; } = string.Empty;
         public string ProductionApiUri { get; set; } = string.Empty;
         public string PubsApiUri { get; set; } = string.Empty;
+        public string SignalRUri { get; set; } = string.Empty;
     }
 }
