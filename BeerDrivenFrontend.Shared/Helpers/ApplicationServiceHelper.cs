@@ -13,7 +13,7 @@ namespace BeerDrivenFrontend.Shared.Helpers
         {
             services.AddHttpClient<IHttpService, HttpService>()
                 .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy())
+                //.AddPolicyHandler(GetCircuitBreakerPolicy())
                 .SetHandlerLifetime(TimeSpan.FromMinutes(2));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILocalStorageService, LocalStorageService>();

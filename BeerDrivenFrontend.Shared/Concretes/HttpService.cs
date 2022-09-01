@@ -243,7 +243,7 @@ namespace BeerDrivenFrontend.Shared.Concretes
 
             if (response.StatusCode.Equals(HttpStatusCode.MethodNotAllowed))
             {
-                //TODO: Create page with MethodNotAllowed
+                //TODO: Create page with OperationNotAllowed
                 throw new Exception("Operation Not Allowed");
             }
 

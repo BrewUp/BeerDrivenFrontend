@@ -40,7 +40,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         _hubConnection.On<string>("beerProductionStarted", async (message) =>
         {
             await LoadProductionOrderAsync();
-            await Bus.Publish(new OrderBeerEvent($"An update for {message} was received"));
+            await Bus.Publish(new OrderBeerEvent($"An update for {message} was received: {DateTime.Now}"));
             StateHasChanged();
         });
 
