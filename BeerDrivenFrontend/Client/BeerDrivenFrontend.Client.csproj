@@ -7,17 +7,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.7" PrivateAssets="all" />
-		<PackageReference Include="MudBlazor" Version="6.0.10" />
-		<PackageReference Include="MudBlazor.ThemeManager" Version="1.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.8" />
+		<PackageReference Include="MudBlazor" Version="6.0.15" />
+		<PackageReference Include="MudBlazor.ThemeManager" Version="1.0.7" />
 		<PackageReference Include="BlazorComponentBus" Version="2.1.0" />
 		<PackageReference Include="Serilog" Version="2.11.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
 	</ItemGroup>
 
 	<ItemGroup>

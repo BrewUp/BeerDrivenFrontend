@@ -17,6 +17,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+#region Authentication
+builder.Services.AddMsalAuthentication(options =>
+{
+    builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+});
+#endregion
+
 #region Configuration
 builder.Services.AddSingleton(_ => builder.Configuration.GetSection("BrewUp:AppConfiguration")
     .Get<AppConfiguration>());

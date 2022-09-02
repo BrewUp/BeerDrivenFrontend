@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
-    <PackageReference Include="MudBlazor" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.8" />
+    <PackageReference Include="MudBlazor" Version="6.0.15" />
     <PackageReference Include="BlazorComponentBus" Version="2.1.0" />
   </ItemGroup>
 
