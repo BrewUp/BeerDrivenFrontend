@@ -5,5 +5,6 @@ namespace BeerDrivenFrontend.Modules.Production.Extensions.Abstracts;
 public interface IProductionService
 {
     Task<IEnumerable<ProductionOrderJson>> GetProductionOrdersAsync();
-    Task SendProductionOrderAsync(OrderJson order);
+    Task SendStartProductionOrderAsync(OrderJson order);
+    Task SendCompleteProductionOrderAsync(OrderJson order);
 }

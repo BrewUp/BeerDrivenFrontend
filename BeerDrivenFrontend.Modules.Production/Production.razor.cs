@@ -125,7 +125,12 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
             return;
 
         order.ProductionTime = order.ProductionTime.ToUniversalTime();
-        await ProductionService.SendProductionOrderAsync(order);
+
+        var chkOrder = ProductionOrders.FirstOrDefault(o => o.BatchNumber.Equals(order.BatchNumber));
+        if (chkOrder == null)
+            await ProductionService.SendStartProductionOrderAsync(order);
+        else
+            await ProductionService.SendCompleteProductionOrderAsync(order);
     }
 
     private void MessageAddedHandler(MessageArgs args)
