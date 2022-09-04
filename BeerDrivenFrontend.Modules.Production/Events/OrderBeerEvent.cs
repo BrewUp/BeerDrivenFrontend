@@ -1,3 +1,3 @@
 ﻿namespace BeerDrivenFrontend.Modules.Production.Events;
 
-public record OrderBeerEvent(string Message);
+public record BrewUpEvent(string Message, string Body);

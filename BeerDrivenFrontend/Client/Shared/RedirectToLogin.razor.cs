@@ -11,6 +11,7 @@ public class RedirectToLoginBase : ComponentBase, IAsyncDisposable
         Navigation.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(Navigation.Uri)}");
     }
 
+    #region Dispose
     public async ValueTask DisposeAsync()
     {
         await DisposeAsyncInternal();
@@ -22,4 +23,5 @@ public class RedirectToLoginBase : ComponentBase, IAsyncDisposable
         // Async cleanup mock
         await Task.Yield();
     }
+    #endregion
 }

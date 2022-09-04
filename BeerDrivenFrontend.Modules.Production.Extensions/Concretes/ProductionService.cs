@@ -27,4 +27,17 @@ public sealed class ProductionService : BaseHttpService, IProductionService
             throw;
         }
     }
+
+    public async Task SendProductionOrderAsync(OrderJson order)
+    {
+        try
+        {
+            await HttpService.Post($"{AppConfiguration.ProductionApiUri}v1/production/beers/brew", order);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(CommonServices.GetDefaultErrorTrace(ex));
+            throw;
+        }
+    }
 }

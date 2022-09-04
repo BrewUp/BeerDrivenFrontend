@@ -1,0 +1,23 @@
+﻿@inherits BeerProductionOrderBase
+@using MudBlazor
+
+<EditForm Model="@Order" OnValidSubmit="OnValidSubmit">
+	<DataAnnotationsValidator/>
+	<MudGrid>
+		<MudItem xs="12" sm="7">
+			<MudCard>
+				<MudCardContent>
+					<MudTextField Label="BeerId" HelperText="Beer Id"
+					              @bind-Value="Order.BeerId" For="@(() => Order.BeerId)"/>
+					<MudTextField Label="BeerType" Class="mt-3"
+					              @bind-Value="Order.BeerType" For="@(() => Order.BeerType)"/>
+					<MudNumericField Label="Quantity" Class="mt-3"
+								  @bind-Value="Order.Quantity" For="@(() => Order.Quantity)" />
+				</MudCardContent>
+				<MudCardActions>
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OnOrderBeer" Class="px-10">Order</MudButton>
+				</MudCardActions>
+			</MudCard>
+		</MudItem>
+	</MudGrid>
+</EditForm>

@@ -5,6 +5,7 @@ using BeerDrivenFrontend.Shared.Configuration;
 using BlazorComponentBus;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Text.Json;
 
 namespace BeerDrivenFrontend.Modules.Production;
 
@@ -16,18 +17,28 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
 
     protected string Message { get; set; } = string.Empty;
     protected IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
+    protected OrderJson CurrentOrder = new();
+    protected ProductionOrderJson CurrentProductionOrder { get; set; } = new();
+    protected bool ShowOrder = false;
 
-    private HubConnection? _hubConnection = default!;
+    private HubConnection? _hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        Bus.Subscribe<OrderBeerEvent>(MessageAddedHandler);
+        Bus.Subscribe<BrewUpEvent>(MessageAddedHandler);
 
         await LoadProductionOrderAsync();
 
         await Connect();
 
         await base.OnInitializedAsync();
+    }
+
+    protected Task LaunchOrder()
+    {
+        ShowOrder = false;
+
+        return Task.CompletedTask;
     }
 
     private async Task Connect()
@@ -40,7 +51,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         _hubConnection.On<string>("beerProductionStarted", async (message) =>
         {
             await LoadProductionOrderAsync();
-            await Bus.Publish(new OrderBeerEvent($"An update for {message} was received: {DateTime.Now}"));
+            await Bus.Publish(new BrewUpEvent($"An update for {message} was received: {DateTime.Now}", string.Empty));
             StateHasChanged();
         });
 
@@ -48,7 +59,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         {
             if (exception != null)
             {
-                Bus.Publish(new OrderBeerEvent(exception.Message));
+                Bus.Publish(new BrewUpEvent(exception.Message, string.Empty));
             }
 
             return null;
@@ -57,12 +68,12 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         try
         {
             await _hubConnection.StartAsync();
-            await Bus.Publish(new OrderBeerEvent(
-                $"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId} - Uri: {Configuration.ProductionApiUri}/hubs/production"));
+            await Bus.Publish(new BrewUpEvent(
+                $"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId} - Uri: {Configuration.ProductionApiUri}/hubs/production", string.Empty));
         }
         catch (Exception e)
         {
-            await Bus.Publish(new OrderBeerEvent($"{e.Message}"));
+            await Bus.Publish(new BrewUpEvent($"{e.Message}", string.Empty));
         }
     }
 
@@ -71,9 +82,60 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         ProductionOrders = await ProductionService.GetProductionOrdersAsync();
     }
 
+    private void GetOrderSelected(BrewUpEvent brewUpEvent)
+    {
+        if (brewUpEvent is null || string.IsNullOrEmpty(brewUpEvent.Body))
+            return;
+
+        CurrentProductionOrder = JsonSerializer.Deserialize<ProductionOrderJson>(brewUpEvent.Body);
+        Message = $"Order Selected {CurrentProductionOrder!.BatchNumber}";
+
+        StateHasChanged();
+    }
+
+    private void PrepareOrder()
+    {
+        CurrentOrder.BeerId = CurrentProductionOrder.BeerId;
+        CurrentOrder.BeerType = CurrentProductionOrder.BeerType;
+        CurrentProductionOrder.BatchNumber = $"{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Day:00}-";
+        CurrentOrder.ProductionTime = DateTime.Now;
+
+        ShowOrder = true;
+    }
+
+    private async Task SendProductionOrderAsync(BrewUpEvent brewUpEvent)
+    {
+        ShowOrder = false;
+
+        if (brewUpEvent is null || string.IsNullOrEmpty(brewUpEvent.Body))
+            return;
+
+        var order = JsonSerializer.Deserialize<OrderJson>(brewUpEvent.Body);
+        if (order is null)
+            return;
+
+        order.ProductionTime = order.ProductionTime.ToUniversalTime();
+        await ProductionService.SendProductionOrderAsync(order);
+    }
+
     private void MessageAddedHandler(MessageArgs args)
     {
-        Message = args.GetMessage<OrderBeerEvent>().Message;
+        Message = args.GetMessage<BrewUpEvent>().Message;
+
+        switch (Message)
+        {
+            case "OrderSelected":
+                GetOrderSelected(args.GetMessage<BrewUpEvent>());
+                break;
+
+            case "OrderBeer":
+                PrepareOrder();
+                break;
+
+            case "SendOrderBeer":
+                Task.Run(async() => await SendProductionOrderAsync(args.GetMessage<BrewUpEvent>()));
+                break;
+        }
 
         StateHasChanged();
     }

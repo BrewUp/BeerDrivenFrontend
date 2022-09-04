@@ -62,7 +62,6 @@ namespace BeerDrivenFrontend.Shared.Concretes
 
                 var response = await _httpClient.SendAsync(request);
 
-                //var response = await this._httpClient.GetAsync(uri);
                 var content = await response.Content.ReadAsStringAsync();
 
                 switch (response.StatusCode)

@@ -21,6 +21,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+    //options.ProviderOptions.DefaultAccessTokenScopes.Add("https://localhost:9043");
+    //options.ProviderOptions.LoginMode = "redirect";
 });
 #endregion
 

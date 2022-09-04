@@ -14,7 +14,7 @@ public class ProductionToolbarBase : ComponentBase, IDisposable
 
     protected Task OnOrderBeer()
     {
-        return Bus.Publish(new OrderBeerEvent("Please ... Prepare beer for me"));
+        return Bus.Publish(new BrewUpEvent("OrderBeer", null));
     }
 
     #region Dispose

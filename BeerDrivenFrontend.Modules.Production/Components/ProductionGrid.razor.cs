@@ -2,6 +2,7 @@
 using BeerDrivenFrontend.Modules.Production.Extensions.Dtos;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Text.Json;
 
 namespace BeerDrivenFrontend.Modules.Production.Components;
 
@@ -22,7 +23,7 @@ public class ProductionGridBase : ComponentBase, IDisposable
 
     protected Task RowClickEvent(TableRowClickEventArgs<ProductionOrderJson> tableRowClickEventArgs)
     {
-        return Bus.Publish(new OrderBeerEvent($"Order selected {tableRowClickEventArgs.Item.BatchNumber}"));
+        return Bus.Publish(new BrewUpEvent($"OrderSelected", JsonSerializer.Serialize(tableRowClickEventArgs.Item)));
     }
 
     protected string SelectedRowClassFunc(ProductionOrderJson element, int rowNumber)
