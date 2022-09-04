@@ -3,8 +3,11 @@
 
 <MudPaper Elevation="25">
 	<MudToolBar>
-		<MudTooltip Text="Order Beer">
-			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnOrderBeer"/>
+		<MudTooltip Text="Add a New Order">
+			<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="OnStartOrderBeer"/>
+		</MudTooltip>
+		<MudTooltip Text="Close Current Order">
+			<MudIconButton Icon="@Icons.Material.Outlined.AddTask" OnClick="OnCompleteOrderBeer"/>
 		</MudTooltip>
 	</MudToolBar>
 </MudPaper>

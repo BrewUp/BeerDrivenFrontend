@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace BeerDrivenFrontend.Modules.Production.Components;
 
-public class ProductionGridBase : ComponentBase, IDisposable
+public class ProductionGridBase : ComponentBase, IAsyncDisposable
 {
     [Inject] private BlazorComponentBus.ComponentBus Bus { get; set; } = default!;
 
@@ -23,7 +23,7 @@ public class ProductionGridBase : ComponentBase, IDisposable
 
     protected Task RowClickEvent(TableRowClickEventArgs<ProductionOrderJson> tableRowClickEventArgs)
     {
-        return Bus.Publish(new BrewUpEvent($"OrderSelected", JsonSerializer.Serialize(tableRowClickEventArgs.Item)));
+        return Bus.Publish(new BrewUpEvent("OrderSelected", JsonSerializer.Serialize(tableRowClickEventArgs.Item)));
     }
 
     protected string SelectedRowClassFunc(ProductionOrderJson element, int rowNumber)
@@ -43,22 +43,16 @@ public class ProductionGridBase : ComponentBase, IDisposable
     }
 
     #region Dispose
-    private static void Dispose(bool disposing)
+    public async ValueTask DisposeAsync()
     {
-        if (disposing)
-        {
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
+        await DisposeAsyncInternal();
         GC.SuppressFinalize(this);
     }
 
-    ~ProductionGridBase()
+    protected virtual async ValueTask DisposeAsyncInternal()
     {
-        Dispose(false);
+        // Async cleanup mock
+        await Task.Yield();
     }
     #endregion
 }

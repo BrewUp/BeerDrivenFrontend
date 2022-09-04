@@ -34,13 +34,6 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         await base.OnInitializedAsync();
     }
 
-    protected Task LaunchOrder()
-    {
-        ShowOrder = false;
-
-        return Task.CompletedTask;
-    }
-
     private async Task Connect()
     {
         _hubConnection = new HubConnectionBuilder()
@@ -51,16 +44,14 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         _hubConnection.On<string>("beerProductionStarted", async (message) =>
         {
             await LoadProductionOrderAsync();
-            await Bus.Publish(new BrewUpEvent($"An update for {message} was received: {DateTime.Now}", string.Empty));
+            await Bus.Publish(new BrewUpEvent($"An update was received: {DateTime.Now}", string.Empty));
             StateHasChanged();
         });
 
         _hubConnection.Closed += exception =>
         {
             if (exception != null)
-            {
                 Bus.Publish(new BrewUpEvent(exception.Message, string.Empty));
-            }
 
             return null;
         };
@@ -71,9 +62,9 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
             await Bus.Publish(new BrewUpEvent(
                 $"signalR Connection successfully established. ConnectionId: {_hubConnection.ConnectionId} - Uri: {Configuration.ProductionApiUri}/hubs/production", string.Empty));
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            await Bus.Publish(new BrewUpEvent($"{e.Message}", string.Empty));
+            await Bus.Publish(new BrewUpEvent($"{ex.Message}", string.Empty));
         }
     }
 
@@ -93,10 +84,29 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         StateHasChanged();
     }
 
-    private void PrepareOrder()
+    private void PrepareNewOrder()
     {
         CurrentOrder.BeerId = CurrentProductionOrder.BeerId;
         CurrentOrder.BeerType = CurrentProductionOrder.BeerType;
+        CurrentProductionOrder.BatchNumber = $"{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Day:00}-";
+        CurrentOrder.ProductionTime = DateTime.Now;
+
+        ShowOrder = true;
+    }
+
+    private void PrepareCompleteOrder()
+    {
+        if (CurrentProductionOrder.QuantityProduced > 0)
+        {
+            Message = $"Order {CurrentProductionOrder.BatchNumber} already closed!";
+            StateHasChanged();
+            return;
+        }
+
+        CurrentOrder.BeerId = CurrentProductionOrder.BeerId;
+        CurrentOrder.BeerType = CurrentProductionOrder.BeerType;
+        CurrentOrder.Quantity = CurrentProductionOrder.QuantityToProduce;
+        CurrentOrder.BatchNumber = CurrentProductionOrder.BatchNumber;
         CurrentProductionOrder.BatchNumber = $"{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Day:00}-";
         CurrentOrder.ProductionTime = DateTime.Now;
 
@@ -128,8 +138,12 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
                 GetOrderSelected(args.GetMessage<BrewUpEvent>());
                 break;
 
-            case "OrderBeer":
-                PrepareOrder();
+            case "AddOrderBeer":
+                PrepareNewOrder();
+                break;
+
+            case "CompleteOrderBeer":
+                PrepareCompleteOrder();
                 break;
 
             case "SendOrderBeer":

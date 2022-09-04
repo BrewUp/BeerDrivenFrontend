@@ -12,9 +12,14 @@ public class ProductionToolbarBase : ComponentBase, IDisposable
         await base.OnInitializedAsync();
     }
 
-    protected Task OnOrderBeer()
+    protected Task OnStartOrderBeer()
     {
-        return Bus.Publish(new BrewUpEvent("OrderBeer", null));
+        return Bus.Publish(new BrewUpEvent("AddOrderBeer", null));
+    }
+
+    protected Task OnCompleteOrderBeer()
+    {
+        return Bus.Publish(new BrewUpEvent("CompleteOrderBeer", null));
     }
 
     #region Dispose
