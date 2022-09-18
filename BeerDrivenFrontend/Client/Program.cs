@@ -6,6 +6,7 @@ using BeerDrivenFrontend.Shared.Helpers;
 using BlazorComponentBus;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Services;
 using MudBlazor.Services;
@@ -15,15 +16,31 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services
+    .AddHttpClient("BrewUpApiClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BrewUpApiClient"));
 
 #region Authentication
 builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-    //options.ProviderOptions.DefaultAccessTokenScopes.Add("https://localhost:9043");
-    //options.ProviderOptions.LoginMode = "redirect";
+    options.ProviderOptions.DefaultAccessTokenScopes.Add(builder.Configuration["AzureAd:Scope"]);
+
+    options.ProviderOptions.LoginMode = "redirect";
 });
+
+//builder.Services.AddBlazoradeMsal(options =>
+//{
+//    var config = builder.Configuration.GetSection("AzureAd");
+//    options.ClientId = config.GetValue<string>("clientId");
+//    options.TenantId = config.GetValue<string>("tenantId");
+
+//    options.DefaultScopes = new[] { "User.Read" };
+//    options.InteractiveLoginMode = InteractiveLoginMode.Popup;
+//    options.TokenCacheScope = TokenCacheScope.Persistent;
+//});
 #endregion
 
 #region Configuration

@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using BeerDrivenFrontend.Shared.Abstracts;
+using Blazorade.Msal.Services;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ namespace BeerDrivenFrontend.Shared.Concretes
     {
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
+        //private readonly BlazoradeRequestFactory _blazoradeRequestFactory;
         //private readonly ILocalStorageService _localStorageService;
         private readonly ISessionStorageService _sessionStorageService;
         private readonly ITokenService _tokenService;
@@ -41,7 +43,7 @@ namespace BeerDrivenFrontend.Shared.Concretes
             // auto logout on 401 response
             if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                _navigationManager.NavigateTo("logout");
+                _navigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(_navigationManager.Uri)}");
                 return default!;
             }
 
@@ -57,6 +59,9 @@ namespace BeerDrivenFrontend.Shared.Concretes
         {
             try
             {
+                //string[] scopes = {"User.Read"};
+                //var request = await _blazoradeRequestFactory.CreateGetRequestAsync($"{uri}", scopes);
+
                 using var request =
                     new HttpRequestMessage(HttpMethod.Get, uri);
 
@@ -66,9 +71,9 @@ namespace BeerDrivenFrontend.Shared.Concretes
 
                 switch (response.StatusCode)
                 {
-                    // auto logout on 401 response
+                    // navigate to login uri
                     case HttpStatusCode.Unauthorized:
-                        _navigationManager.NavigateTo("logout");
+                        _navigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(_navigationManager.Uri)}");
                         return default!;
 
                     case HttpStatusCode.InternalServerError:
@@ -219,7 +224,7 @@ namespace BeerDrivenFrontend.Shared.Concretes
             // auto logout on 401 response
             if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                _navigationManager.NavigateTo("logout");
+                _navigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(_navigationManager.Uri)}");
                 return default!;
             }
 
@@ -249,7 +254,7 @@ namespace BeerDrivenFrontend.Shared.Concretes
             // auto logout on 401 response
             if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                _navigationManager.NavigateTo("logout");
+                _navigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(_navigationManager.Uri)}");
             }
 
             // throw exception on error response

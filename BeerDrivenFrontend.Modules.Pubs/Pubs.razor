@@ -3,6 +3,8 @@
 
 @using MudBlazor
 @using BeerDrivenFrontend.Modules.Pubs.Components
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <PageTitle>Pubs</PageTitle>
 <PubsToolbar></PubsToolbar>
@@ -10,3 +12,16 @@
 <MudAlert>@Message</MudAlert>
 
 <PubsGrid Beers="@Beers"></PubsGrid>
+
+@*<AuthorizeView>
+	<Authorized>
+		<PubsToolbar></PubsToolbar>
+		<hr/>
+		<MudAlert>@Message</MudAlert>
+
+		<PubsGrid Beers="@Beers"></PubsGrid>
+	</Authorized>
+	<NotAuthorized>
+		<RedirectToLogin />
+	</NotAuthorized>
+</AuthorizeView>*@
