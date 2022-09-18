@@ -128,7 +128,10 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
 
         var chkOrder = ProductionOrders.FirstOrDefault(o => o.BatchNumber.Equals(order.BatchNumber));
         if (chkOrder == null)
+        {
+            order.BeerId = Guid.NewGuid().ToString();
             await ProductionService.SendStartProductionOrderAsync(order);
+        }
         else
             await ProductionService.SendCompleteProductionOrderAsync(order);
     }
