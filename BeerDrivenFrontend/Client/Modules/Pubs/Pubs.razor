@@ -1,0 +1,12 @@
+﻿@inherits PubsBase
+@page "/pubs"
+
+@using MudBlazor
+@using BeerDrivenFrontend.Client.Modules.Pubs.Components
+
+<PageTitle>Pubs</PageTitle>
+<PubsToolbar></PubsToolbar>
+<hr/>
+<MudAlert>@Message</MudAlert>
+
+<PubsGrid Beers="@Beers"></PubsGrid>

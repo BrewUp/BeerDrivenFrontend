@@ -1,6 +1,8 @@
 using BeerDrivenFrontend.Client;
-using BeerDrivenFrontend.Modules.Production.Extensions;
-using BeerDrivenFrontend.Modules.Pubs.Extensions;
+using BeerDrivenFrontend.Client.Modules.Production.Extensions.Abstracts;
+using BeerDrivenFrontend.Client.Modules.Production.Extensions.Concretes;
+using BeerDrivenFrontend.Client.Modules.Pubs.Extensions.Abstracts;
+using BeerDrivenFrontend.Client.Modules.Pubs.Extensions.Concretes;
 using BeerDrivenFrontend.Shared.Configuration;
 using BeerDrivenFrontend.Shared.Helpers;
 using BlazorComponentBus;
@@ -16,15 +18,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-#region Authentication
-builder.Services.AddMsalAuthentication(options =>
-{
-    builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-    //options.ProviderOptions.DefaultAccessTokenScopes.Add("https://localhost:9043");
-    //options.ProviderOptions.LoginMode = "redirect";
-});
-#endregion
 
 #region Configuration
 builder.Services.AddSingleton(_ => builder.Configuration.GetSection("BrewUp:AppConfiguration")
@@ -47,8 +40,9 @@ builder.Services.AddScoped<ComponentBus>();
 #endregion
 
 #region Modules
-builder.Services.AddProductionModule();
-builder.Services.AddPubsModule();
+builder.Services.AddScoped<IProductionService, ProductionService>();
+
+builder.Services.AddScoped<IBeerService, BeerService>();
 #endregion
 
 await builder.Build().RunAsync();

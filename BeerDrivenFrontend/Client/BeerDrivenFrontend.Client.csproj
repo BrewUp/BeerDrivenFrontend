@@ -23,19 +23,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\BeerDrivenFrontend.Shared\BeerDrivenFrontend.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<BlazorWebAssemblyLazyLoad Include="BeerDrivenFrontend.Modules.Production.dll" />
-		<BlazorWebAssemblyLazyLoad Include="BeerDrivenFrontend.Modules.Pubs.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\BeerDrivenFrontend.Modules.Production.Extensions\BeerDrivenFrontend.Modules.Production.Extensions.csproj" />
-	  <ProjectReference Include="..\..\BeerDrivenFrontend.Modules.Production\BeerDrivenFrontend.Modules.Production.csproj" />
-	  <ProjectReference Include="..\..\BeerDrivenFrontend.Modules.Pubs.Extensions\BeerDrivenFrontend.Modules.Pubs.Extensions.csproj" />
-	  <ProjectReference Include="..\..\BeerDrivenFrontend.Modules.Pubs\BeerDrivenFrontend.Modules.Pubs.csproj" />
 	</ItemGroup>
 
 </Project>
