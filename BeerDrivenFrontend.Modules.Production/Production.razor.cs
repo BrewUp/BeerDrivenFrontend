@@ -134,6 +134,8 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         }
         else
             await ProductionService.SendCompleteProductionOrderAsync(order);
+
+        StateHasChanged();
     }
 
     private void MessageAddedHandler(MessageArgs args)
