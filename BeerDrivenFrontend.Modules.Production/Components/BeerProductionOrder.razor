@@ -1,4 +1,5 @@
 ﻿@inherits BeerProductionOrderBase
+@using BeerDrivenFrontend.Modules.Production.Extensions.Dtos
 @using MudBlazor
 
 <EditForm Model="@Order" OnValidSubmit="OnValidSubmit">
@@ -7,8 +8,12 @@
 		<MudItem xs="12" sm="12">
 			<MudCard>
 				<MudCardContent>
-					<MudTextField Label="BeerType" Class="mt-3"
-					              @bind-Value="Order.BeerType" For="@(() => Order.BeerType)"/>
+					<MudSelect T="BeerLookupJson" Label="Beer" HelperText="Select your favorite beer" @bind-Value="CurrentBeer">
+						@foreach (var beer in Beers)
+						{
+							<MudSelectItem Value="@(beer)">@beer.BeerType</MudSelectItem>
+						}
+					</MudSelect>
 					<MudTextField Label="Order #"
 								  @bind-Value="Order.BatchNumber" For="@(() => Order.BatchNumber)" />
 					<MudNumericField Label="Quantity" Class="mt-3"

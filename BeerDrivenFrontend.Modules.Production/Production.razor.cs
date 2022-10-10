@@ -17,6 +17,8 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
 
     protected string Message { get; set; } = string.Empty;
     protected IEnumerable<ProductionOrderJson> ProductionOrders { get; set; } = Enumerable.Empty<ProductionOrderJson>();
+    protected IEnumerable<BeerLookupJson> Beers { get; set; } = Enumerable.Empty<BeerLookupJson>();
+
     protected OrderJson CurrentOrder = new();
     protected ProductionOrderJson CurrentProductionOrder { get; set; } = new();
     protected bool ShowOrder = false;
@@ -28,6 +30,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         Bus.Subscribe<BrewUpEvent>(MessageAddedHandler);
 
         await LoadProductionOrderAsync();
+        await LoadBeersAsync();
 
         await Connect();
 
@@ -73,6 +76,11 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         ProductionOrders = await ProductionService.GetProductionOrdersAsync();
     }
 
+    private async Task LoadBeersAsync()
+    {
+        Beers = await ProductionService.GetBeersAsync();
+    }
+
     private void GetOrderSelected(BrewUpEvent brewUpEvent)
     {
         if (brewUpEvent is null || string.IsNullOrEmpty(brewUpEvent.Body))
@@ -106,6 +114,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         CurrentOrder.BeerId = CurrentProductionOrder.BeerId;
         CurrentOrder.BeerType = CurrentProductionOrder.BeerType;
         CurrentOrder.Quantity = CurrentProductionOrder.QuantityToProduce;
+        CurrentOrder.BatchId = CurrentProductionOrder.BatchId;
         CurrentOrder.BatchNumber = CurrentProductionOrder.BatchNumber;
         CurrentProductionOrder.BatchNumber = $"{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Day:00}-";
         CurrentOrder.ProductionTime = DateTime.Now;
@@ -115,8 +124,6 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
 
     private async Task SendProductionOrderAsync(BrewUpEvent brewUpEvent)
     {
-        ShowOrder = false;
-
         if (brewUpEvent is null || string.IsNullOrEmpty(brewUpEvent.Body))
             return;
 
@@ -135,6 +142,7 @@ public class ProductionBase : ComponentBase, IAsyncDisposable
         else
             await ProductionService.SendCompleteProductionOrderAsync(order);
 
+        ShowOrder = false;
         StateHasChanged();
     }
 
